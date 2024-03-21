@@ -1,78 +1,5 @@
-# Check Move
-def check_king(position): 
-    moves_list = []
-    targets = [(1, 0), (1, 1), (1, -1), (-1, 0),
-               (-1, 1), (-1, -1), (0, 1), (0, -1)]
-    for i in range(8):
-        target = (position[0] + targets[i][0], position[1] + targets[i][1])
-        if 0 <= target[0] <= 7 and 0 <= target[1] <= 7:
-            moves_list.append(target)
-    return moves_list
-
-def check_queen(position):
-    moves_list = check_bishop(position)
-    second_list = check_rook(position)
-    for i in range(len(second_list)):
-        moves_list.append(second_list[i])
-    return moves_list
-
-def check_bishop(position):
-    moves_list = []
-    for i in range(4):  # up-right, up-left, down-right, down-left
-        path = True
-        chain = 1
-        if i == 0:
-            x = 1
-            y = -1
-        elif i == 1:
-            x = -1
-            y = -1
-        elif i == 2:
-            x = 1
-            y = 1
-        else:
-            x = -1
-            y = 1
-        while path:
-            if 0 <= position[0] + (chain * x) <= 7 and 0 <= position[1] + (chain * y) <= 7:
-                moves_list.append(
-                    (position[0] + (chain * x), position[1] + (chain * y)))
-                chain += 1
-            else:
-                path = False
-    return moves_list
-
-def check_rook(position):
-    moves_list = []
-    for i in range(4):  # down, up, right, left
-        path = True
-        chain = 1
-        if i == 0:
-            x = 0
-            y = 1
-        elif i == 1:
-            x = 0
-            y = -1
-        elif i == 2:
-            x = 1
-            y = 0
-        else:
-            x = -1
-            y = 0
-        while path:
-            if 0 <= position[0] + (chain * x) <= 7 and 0 <= position[1] + (chain * y) <= 7:
-                moves_list.append(
-                    (position[0] + (chain * x), position[1] + (chain * y)))
-                chain += 1
-            else:
-                path = False
-    return moves_list
-
-def check_pawn(position):
-    moves_list = []
-    moves_list.append((position[0] -1, position[1]-1 ))
-    moves_list.append((position[0] -1, position[1]+1 ))
-    return moves_list
+from check_move import *
+from manage_board import *
 
 # Manage Board
 def string_to_board(multi_line_string):
@@ -173,7 +100,8 @@ def is_king_checked(board, king_position):
             'Q':'Queen',
             'P':'Pawn',
             'B':'Bishop',
-            'R':'Rook'
+            'R':'Rook',
+            'k':'Knight'
         }
         for char, pos in attacking_pieces:
             print(f"\n{name[char]} ({char}):")
@@ -195,6 +123,8 @@ def get_valid_moves(board, position):
         return check_rook(position)
     elif char == "P":
         return check_pawn(position)
+    elif char == "k":
+        return check_knight(position)
     else:
         return []
 
@@ -231,6 +161,8 @@ def draw_moves(board,char,pos):
         move_list = check_rook(pos)
     elif char == "P":
         move_list = check_pawn(pos)
+    elif char == "k":
+        move_list = check_knight(pos)
     else:
         return -1
     #Draw
@@ -308,7 +240,7 @@ def start(filenames,default_board): #fix and write file
         write_board = string_to_board(default_board)
         write_board_to_file(write_board, 'default_board.chess')
         filenames.append('default_board.chess')
-        
+
 #Run
 def checkmate(filenames): #main function
     for filename in filenames:
