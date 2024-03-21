@@ -106,6 +106,28 @@ def read_board_from_file(filename):
 def create_base(num_rows, num_cols):
     return [['.' for _ in range(num_cols)] for _ in range(num_rows)]
 
+#check
+def check_and_fix_string(input_string):
+    lines = input_string.strip().split('\n')
+
+    all_chars_have_space = True
+    formatted_lines = []
+    for line in lines:
+        formatted_line = ' '.join(char for char in line)
+        formatted_lines.append(formatted_line)
+        
+        if any(char != ' ' for char in line):
+            all_chars_have_space = False
+
+    fixed_string = '\n'.join(formatted_lines)
+
+    if all_chars_have_space:
+        pass
+    else:
+        print("Add space between characters. Fixing...")
+
+    return fixed_string
+
 def check_board_dimensions_error(board):
     num_rows = len(board)
     num_cols = len(board[0]) if board else 0
@@ -118,6 +140,21 @@ def check_board_dimensions_error(board):
         return True
 
     return False
+
+#main control
+def write_board_to_file(board, filename):
+    with open(filename, 'w') as file:
+        for row in board:
+            formatted_row = ' '.join(cell if cell != '.' else '.' for cell in row).rstrip()
+            file.write(formatted_row + '\n')
+
+def start(filenames,default_board):
+    if not filenames:
+        print("No filenames provided. Writing default board configuration to 'default_board.chess'.")
+        default_board = check_and_fix_string(default_board)
+        write_board = string_to_board(default_board)
+        write_board_to_file(write_board, 'default_board.chess')
+        filenames.append('default_board.chess')
 
 # Calculate
 def count_rows_cols(board):
