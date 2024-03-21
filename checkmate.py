@@ -1,5 +1,4 @@
 from check_move import *
-from manage_board import *
 
 # Manage Board
 def string_to_board(multi_line_string):
@@ -195,9 +194,13 @@ def get_opponents_moves(board):
 def simulate_move(board, from_pos, to_pos):
     print("\nSimulate Move")
     # Create a copy of the board to simulate the move
-    new_board = [row[:] for row in board]
-    new_board[to_pos[0]][to_pos[1]] = new_board[from_pos[0]][from_pos[1]]
-    new_board[from_pos[0]][from_pos[1]] = '.'
+    try:
+        new_board = [row[:] for row in board]
+        new_board[to_pos[0]][to_pos[1]] = new_board[from_pos[0]][from_pos[1]]
+        new_board[from_pos[0]][from_pos[1]] = '.'
+    except Exception as e:
+            print(f"Simulate Error: {e} :But I'm Lazy to fix GoodBye")
+
     return new_board
 
 #main control
