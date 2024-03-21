@@ -4,13 +4,11 @@ from checkmate import checkmate,start
 
 def main():
     filenames = sys.argv[1:]  # Command line arguments after the script name
-    default_board  = """\
-        R...
-        .K..
-        ..P.
-        ....\
-        """
-    start(filenames,default_board)
+    input_string =""
+    
+    start(filenames,input_string)
+
+    
 
     checkmate(filenames)
 

@@ -235,9 +235,19 @@ def write_board_to_file(board, filename):
 
 def start(filenames,default_board): #fix and write file
     if not filenames:
+        print("Enter the board configuration. Input will stop once the number of rows becomes equal to the number of columns:")
+        default_board = ""
+        while True:
+            line = input()
+            default_board += line + "\n"
+            num_rows = len(default_board.strip().split('\n'))
+            num_cols = len(default_board.strip().split('\n')[0].strip())
+            if num_rows == num_cols:
+                break
         print("No filenames provided. Writing default board configuration to 'default_board.chess'.")
         default_board = check_and_fix_string(default_board)
         write_board = string_to_board(default_board)
+        print(write_board)
         write_board_to_file(write_board, 'default_board.chess')
         filenames.append('default_board.chess')
 
@@ -253,6 +263,7 @@ def checkmate(filenames): #main function
 
         try:
             characters = find_characters(format_board)
+            print(characters)
             king_positions = characters.get('K', [])
             if len(king_positions) > 0:
                 king_position = king_positions[0]
@@ -263,4 +274,4 @@ def checkmate(filenames): #main function
             else:
                 print(f"King not found in {filename}.")
         except Exception as e:
-            print(f"An error occurred while processing {filename}: {e}")
+            print(f"An error occurred while processing {filename}: {e} :But I'm Lazy to fix GoodBye")
