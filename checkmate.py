@@ -1,5 +1,5 @@
 # Check Move
-def check_king(position):
+def check_king(position): 
     moves_list = []
     targets = [(1, 0), (1, 1), (1, -1), (-1, 0),
                (-1, 1), (-1, -1), (0, 1), (0, -1)]
@@ -81,6 +81,7 @@ def string_to_board(multi_line_string):
     for line in lines:
         row = line.split()
         if len(row) > 8:
+            err_board_print()
             print("Error: The board is too large.")
             return -1  # Unequal row length
         board.append(row)  # Split line by whitespace to remove spaces
@@ -89,6 +90,11 @@ def string_to_board(multi_line_string):
     if len(set(row_lengths)) != 1:
         print("Error: Unequal row lengths")
         return -1  # Unequal row lengths
+    
+    if check_board_dimensions_error(board):
+        print("Error: Isn't Square")
+        return -1
+
 
     return board
 
@@ -99,6 +105,19 @@ def read_board_from_file(filename):
 
 def create_base(num_rows, num_cols):
     return [['.' for _ in range(num_cols)] for _ in range(num_rows)]
+
+def check_board_dimensions_error(board):
+    num_rows = len(board)
+    num_cols = len(board[0]) if board else 0
+
+    for row in board:
+        if len(row) != num_cols:
+            return True
+
+    if num_rows != num_cols:
+        return True
+
+    return False
 
 # Calculate
 def count_rows_cols(board):
@@ -246,14 +265,17 @@ def get_opponents_moves(board):
                 opponents_moves.extend(opponent_moves)
     return opponents_moves
 
-
-
 def simulate_move(board, from_pos, to_pos):
+    print("\nSimulate Move")
     # Create a copy of the board to simulate the move
     new_board = [row[:] for row in board]
     new_board[to_pos[0]][to_pos[1]] = new_board[from_pos[0]][from_pos[1]]
     new_board[from_pos[0]][from_pos[1]] = '.'
     return new_board
+
+def err_board_print(err_board):
+    for row in err_board:
+        print(row)
 
 #Run
 def checkmate(filenames):
@@ -278,4 +300,3 @@ def checkmate(filenames):
                 print(f"King not found in {filename}.")
         except Exception as e:
             print(f"An error occurred while processing {filename}: {e}")
-
