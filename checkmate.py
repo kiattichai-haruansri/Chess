@@ -81,7 +81,6 @@ def string_to_board(multi_line_string):
     for line in lines:
         row = line.split()
         if len(row) > 8:
-            err_board_print()
             print("Error: The board is too large.")
             return -1  # Unequal row length
         board.append(row)  # Split line by whitespace to remove spaces
@@ -140,21 +139,6 @@ def check_board_dimensions_error(board):
         return True
 
     return False
-
-#main control
-def write_board_to_file(board, filename):
-    with open(filename, 'w') as file:
-        for row in board:
-            formatted_row = ' '.join(cell if cell != '.' else '.' for cell in row).rstrip()
-            file.write(formatted_row + '\n')
-
-def start(filenames,default_board):
-    if not filenames:
-        print("No filenames provided. Writing default board configuration to 'default_board.chess'.")
-        default_board = check_and_fix_string(default_board)
-        write_board = string_to_board(default_board)
-        write_board_to_file(write_board, 'default_board.chess')
-        filenames.append('default_board.chess')
 
 # Calculate
 def count_rows_cols(board):
@@ -310,12 +294,23 @@ def simulate_move(board, from_pos, to_pos):
     new_board[from_pos[0]][from_pos[1]] = '.'
     return new_board
 
-def err_board_print(err_board):
-    for row in err_board:
-        print(row)
+#main control
+def write_board_to_file(board, filename): 
+    with open(filename, 'w') as file:
+        for row in board:
+            formatted_row = ' '.join(cell if cell != '.' else '.' for cell in row).rstrip()
+            file.write(formatted_row + '\n')
 
+def start(filenames,default_board): #fix and write file
+    if not filenames:
+        print("No filenames provided. Writing default board configuration to 'default_board.chess'.")
+        default_board = check_and_fix_string(default_board)
+        write_board = string_to_board(default_board)
+        write_board_to_file(write_board, 'default_board.chess')
+        filenames.append('default_board.chess')
+        
 #Run
-def checkmate(filenames):
+def checkmate(filenames): #main function
     for filename in filenames:
         board_string = read_board_from_file(filename)
 
