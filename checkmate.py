@@ -24,36 +24,10 @@ def string_to_board(multi_line_string):
 
     return board
 
-def read_board_from_file(filename):
-    with open(filename, 'r') as file:
-        board_string = file.read()
-    return board_string
-
 def create_base(num_rows, num_cols):
     return [['.' for _ in range(num_cols)] for _ in range(num_rows)]
 
 #check
-def check_and_fix_string(input_string):
-    lines = input_string.strip().split('\n')
-
-    all_chars_have_space = True
-    formatted_lines = []
-    for line in lines:
-        formatted_line = ' '.join(char for char in line)
-        formatted_lines.append(formatted_line)
-        
-        if any(char != ' ' for char in line):
-            all_chars_have_space = False
-
-    fixed_string = '\n'.join(formatted_lines)
-
-    if all_chars_have_space:
-        pass
-    else:
-        print("Add space between characters. Fixing...")
-
-    return fixed_string
-
 def check_board_dimensions_error(board):
     num_rows = len(board)
     num_cols = len(board[0]) if board else 0
@@ -227,6 +201,32 @@ def simulate_move(board, from_pos, to_pos):
     return new_board
 
 #main control
+def read_board_from_file(filename):
+    with open(filename, 'r') as file:
+        board_string = file.read()
+    return board_string
+
+def check_and_fix_string(input_string):
+    lines = input_string.strip().split('\n')
+
+    all_chars_have_space = True
+    formatted_lines = []
+    for line in lines:
+        formatted_line = ' '.join(char for char in line)
+        formatted_lines.append(formatted_line)
+        
+        if any(char != ' ' for char in line):
+            all_chars_have_space = False
+
+    fixed_string = '\n'.join(formatted_lines)
+
+    if all_chars_have_space:
+        pass
+    else:
+        print("Add space between characters. Fixing...")
+
+    return fixed_string
+
 def write_board_to_file(board, filename): 
     with open(filename, 'w') as file:
         for row in board:
