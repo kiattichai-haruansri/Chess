@@ -266,7 +266,6 @@ def checkmate(filenames): #main function
 
         try:
             characters = find_characters(format_board)
-            print(characters)
             king_positions = characters.get('K', [])
             if len(king_positions) > 0:
                 king_position = king_positions[0]
