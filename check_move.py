@@ -1,4 +1,6 @@
 # Check Move
+
+# Function to check valid moves for the king
 def check_king(position): 
     moves_list = []
     targets = [(1, 0), (1, 1), (1, -1), (-1, 0),
@@ -9,6 +11,7 @@ def check_king(position):
             moves_list.append(target)
     return moves_list
 
+# Function to check valid moves for the queen
 def check_queen(position):
     moves_list = check_bishop(position)
     second_list = check_rook(position)
@@ -16,6 +19,7 @@ def check_queen(position):
         moves_list.append(second_list[i])
     return moves_list
 
+# Function to check valid moves for the bishop
 def check_bishop(position):
     moves_list = []
     for i in range(4):  # up-right, up-left, down-right, down-left
@@ -42,6 +46,7 @@ def check_bishop(position):
                 path = False
     return moves_list
 
+# Function to check valid moves for the rook
 def check_rook(position):
     moves_list = []
     for i in range(4):  # down, up, right, left
@@ -68,12 +73,14 @@ def check_rook(position):
                 path = False
     return moves_list
 
+# Function to check valid moves for the pawn
 def check_pawn(position):
     moves_list = []
     moves_list.append((position[0] -1, position[1]-1 ))
     moves_list.append((position[0] -1, position[1]+1 ))
     return moves_list
 
+# Function to check valid moves for the knight
 def check_knight(position):
     moves_list = []
     # 8 squares to check for knights, they can go two squares in one direction and one in another

@@ -2,46 +2,60 @@ from check_move import *
 
 # Manage Board
 def string_to_board(multi_line_string):
-    lines = multi_line_string.strip().split('\n')  # Remove leading/trailing whitespace
+    # Split the input string into lines
+    lines = multi_line_string.strip().split('\n')
+    
+    # Initialize an empty board
     board = []
+    
+    # Iterate over each line in the input
     for line in lines:
+        # Split the line into individual characters
         row = line.split()
+        
+        # Check if the row length exceeds the maximum allowed (8)
         if len(row) > 8:
             print("Error: The board is too large.")
-            return -1  # Unequal row length
-        board.append(row)  # Split line by whitespace to remove spaces
+            return -1  # Return error code
+            
+        # Append the row to the board
+        board.append(row)
     
+    # Check if the board dimensions are consistent
     row_lengths = [len(line.split()) for line in lines]
     if len(set(row_lengths)) != 1:
         print("Error: Unequal row lengths")
-        return -1  # Unequal row lengths
+        return -1  # Return error code
     
+    # Check if the board is square
     if check_board_dimensions_error(board):
         print("Error: Isn't Square")
-        return -1
-
+        return -1  # Return error code
 
     return board
 
 def create_base(num_rows, num_cols):
+    # Create a base board with specified dimensions filled with empty cells
     return [['.' for _ in range(num_cols)] for _ in range(num_rows)]
 
-#check
+# Check
 def check_board_dimensions_error(board):
+    # Check if the board dimensions are consistent
     num_rows = len(board)
     num_cols = len(board[0]) if board else 0
 
     for row in board:
         if len(row) != num_cols:
-            return True
+            return True  # Dimensions are inconsistent
 
     if num_rows != num_cols:
-        return True
+        return True  # Dimensions are inconsistent
 
     return False
 
 # Calculate
 def count_rows_cols(board):
+    # Calculate the number of rows and columns in the board
     num_rows = len(board)
     if num_rows == 0:
         return 0, 0  # Empty board
@@ -50,6 +64,7 @@ def count_rows_cols(board):
     return num_rows, num_cols
 
 def find_characters(board):
+    # Find positions of all characters on the board
     characters = {}
     for i, row in enumerate(board):
         for j, col in enumerate(row):
@@ -59,6 +74,7 @@ def find_characters(board):
     return characters
 
 def is_king_checked(board, king_position):
+    # Check if the king is under attack
     characters = find_characters(board)
     attacking_pieces = []
     for char, positions in characters.items():
@@ -67,24 +83,27 @@ def is_king_checked(board, king_position):
                 if king_position in get_valid_moves(board, pos):
                     attacking_pieces.append((char, pos))
     if attacking_pieces:
+        # King is under attack
         print("\nSuccess")
         name = {
-            'K':'King',
-            'Q':'Queen',
-            'P':'Pawn',
-            'B':'Bishop',
-            'R':'Rook',
-            'k':'Knight'
+            'K': 'King',
+            'Q': 'Queen',
+            'P': 'Pawn',
+            'B': 'Bishop',
+            'R': 'Rook',
+            'k': 'Knight'
         }
         for char, pos in attacking_pieces:
             print(f"\n{name[char]} ({char}):")
-            draw_moves(base,char,pos)
+            draw_moves(base, char, pos)
         return True
     else:
+        # King is not under attack
         print("\nFail")
         return False
 
 def get_valid_moves(board, position):
+    # Get valid moves for a piece at a given position
     char = board[position[0]][position[1]]
     if char == "K":
         return check_king(position)
@@ -102,6 +121,7 @@ def get_valid_moves(board, position):
         return []
 
 def draw_board_with_moves(board, char):
+    # Draw the board with moves for a specific piece highlighted
     characters = {char: []}
     for i, row in enumerate(board):
         for j, col in enumerate(row):
@@ -119,11 +139,12 @@ def draw_board_with_moves(board, char):
                 print('.', end=' ')
         print()
 
-def draw_moves(board,char,pos):
-    if pos == (-1,-1):
+def draw_moves(board, char, pos):
+    # Draw possible moves for a piece
+    if pos == (-1, -1):
         print("Can't find pieces")
         return -1
-    #Check Char
+    # Check Char
     if char == "K":
         move_list = check_king(pos)
     elif char == "Q":
@@ -137,13 +158,14 @@ def draw_moves(board,char,pos):
     elif char == "k":
         move_list = check_knight(pos)
     else:
-        return -1
-    #Draw
+                return -1
+
+    # Draw the board with possible moves highlighted
     for i, row in enumerate(board):
         for j, col in enumerate(row):
-            if (i,j) in move_list:
+            if (i, j) in move_list:
                 print('X', end=' ')
-            elif (i,j) == pos:
+            elif (i, j) == pos:
                 print(char, end=' ')
             else:
                 print('.', end=' ')
@@ -182,6 +204,7 @@ def is_checkmate(board, king_position):
     return True
 
 def get_opponents_moves(board):
+    # Get all possible moves for the opponent's pieces
     opponents_moves = []
     for i in range(len(board)):
         for j in range(len(board[0])):
@@ -192,6 +215,7 @@ def get_opponents_moves(board):
     return opponents_moves
 
 def simulate_move(board, from_pos, to_pos):
+    # Simulate a move on the board
     print("\nSimulate Move")
     # Create a copy of the board to simulate the move
     try:
@@ -199,17 +223,19 @@ def simulate_move(board, from_pos, to_pos):
         new_board[to_pos[0]][to_pos[1]] = new_board[from_pos[0]][from_pos[1]]
         new_board[from_pos[0]][from_pos[1]] = '.'
     except Exception as e:
-            print(f"Simulate Error: {e} :But I'm Lazy to fix GoodBye")
+        print(f"Simulate Error: {e} :But I'm Lazy to fix GoodBye")
 
     return new_board
 
-#main control
+# Main control
 def read_board_from_file(filename):
+    # Read the board configuration from a file
     with open(filename, 'r') as file:
         board_string = file.read()
     return board_string
 
 def check_and_fix_string(input_string):
+    # Check and fix the input string format
     lines = input_string.strip().split('\n')
 
     all_chars_have_space = True
@@ -231,12 +257,13 @@ def check_and_fix_string(input_string):
     return fixed_string
 
 def write_board_to_file(board, filename): 
+    # Write the board configuration to a file
     with open(filename, 'w') as file:
         for row in board:
             formatted_row = ' '.join(cell if cell != '.' else '.' for cell in row).rstrip()
             file.write(formatted_row + '\n')
 
-def start(filenames,default_board): #fix and write file
+def start(filenames, default_board): # Fix and write file
     if not filenames:
         print("Enter the board configuration. Input will stop once the number of rows becomes equal to the number of columns:")
         default_board = ""
@@ -254,8 +281,8 @@ def start(filenames,default_board): #fix and write file
         write_board_to_file(write_board, 'default_board.chess')
         filenames.append('default_board.chess')
 
-#Run
-def checkmate(filenames): #main function
+# Run
+def checkmate(filenames): # Main function
     for filename in filenames:
         board_string = read_board_from_file(filename)
 
@@ -277,3 +304,4 @@ def checkmate(filenames): #main function
                 print(f"King not found in {filename}.")
         except Exception as e:
             print(f"An error occurred while processing {filename}: {e} :But I'm Lazy to fix GoodBye")
+
